@@ -10,14 +10,12 @@ const PORT = process.env.PORT;
 	// Express server and middlewares
 	const server: express.Application = new Server().app;
 
-	server.use(express.json());
-
-	const appServer = server.listen(PORT, () => {
+	server.listen(PORT, () => {
 		console.log(`Listening on port: ${PORT}`);
 	});
 
 	// On server close
-	appServer.close(() => {
-		console.log('Node server closed!');
-	});
+	// appServer.close(() => {
+	// 	console.log('Node server closed!');
+	// });
 })();

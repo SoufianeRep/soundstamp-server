@@ -13,5 +13,7 @@ export class UserRoutes {
 		console.log('user routes');
 
 		this.router.get('/', this.controller.readUsers);
+
+		this.router.post('/', this.controller.createUser);
 	}
 }

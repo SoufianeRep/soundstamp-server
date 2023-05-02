@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { registerApiRoutes } from './components';
+import { registerErrorHandler, registerMiddleware } from './middleware';
 
 /**
  * Init Express REST routes
@@ -13,5 +14,7 @@ export function initApiRoutes(router: Router): void {
 	router.get(prefix, (req: Request, res: Response) => res.send('PING'));
 
 	// routers
+	registerMiddleware(router);
 	registerApiRoutes(router, prefix);
+	registerErrorHandler(router);
 }

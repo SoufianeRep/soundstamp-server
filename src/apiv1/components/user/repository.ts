@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { PrismaClient, PrismaPromise, User } from '@prisma/client';
 
 const prisma = new PrismaClient({ log: ['query', 'error', 'error', 'warn'] });
