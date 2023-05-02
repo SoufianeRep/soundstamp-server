@@ -17,11 +17,9 @@ export function registerMiddleware(router: Router): void {
  */
 export function registerErrorHandler(router: Router): Response | void {
 	router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-		if (err && !err.message) {
-			return res.status(500).json({
-				error: err.message || err,
-				status: 500,
-			});
-		}
+		return res.status(500).json({
+			error: err.message || err,
+			status: 500,
+		});
 	});
 }

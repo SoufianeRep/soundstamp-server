@@ -1,6 +1,6 @@
 import { PrismaClient, PrismaPromise, User } from '@prisma/client';
 
-const prisma = new PrismaClient({ log: ['query', 'error', 'error', 'warn'] });
+const prisma = new PrismaClient({ log: ['query', 'info', 'error'] });
 
 export class UserRepository {
 	/**
@@ -9,7 +9,7 @@ export class UserRepository {
 	 * @param email Email to search for
 	 * @returns User
 	 */
-	readByEmail(email: string): PrismaPromise<User | null> | Error {
+	readByEmail(email: string) {
 		try {
 			return prisma.user.findUnique({
 				where: {
@@ -26,7 +26,7 @@ export class UserRepository {
 	 *
 	 * @returns User[]
 	 */
-	readAllUsers(): PrismaPromise<User[] | []> | Error {
+	readAllUsers(): PrismaPromise<User[] | []> {
 		try {
 			return prisma.user.findMany();
 		} catch (error: unknown) {
@@ -40,7 +40,7 @@ export class UserRepository {
 	 * @param User User object
 	 * @returns User
 	 */
-	createUser(user: User): PrismaPromise<User> | Error {
+	createUser(user: User): PrismaPromise<User> {
 		try {
 			return prisma.user.create({
 				data: {
