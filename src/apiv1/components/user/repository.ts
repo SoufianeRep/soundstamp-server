@@ -13,7 +13,7 @@ export class UserRepository {
 		try {
 			return prisma.user.findUnique({
 				where: {
-					email: email,
+					email,
 				},
 			});
 		} catch (error: unknown) {

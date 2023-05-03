@@ -1,10 +1,13 @@
 import { PrismaClient } from '@prisma/client';
+import { UtilityService } from '../src/services/utility';
 
 const prisma = new PrismaClient({
 	log: ['query', 'info', 'warn', 'error'],
 });
 
 const main = async () => {
+	const hashPassword = UtilityService.hashPassword;
+
 	const soufiane = await prisma.user.upsert({
 		where: { email: 'ezzine.soufiane@gmail.com' },
 		update: {},
@@ -12,7 +15,7 @@ const main = async () => {
 			firstName: 'soufiane',
 			lastName: 'ezzine',
 			email: 'ezzine.soufiane@gmail.com',
-			password: 'secret',
+			password: await hashPassword('secret'),
 			avatarUrl: 'https://avatars.githubusercontent.com/u/59670612?v=4',
 			role: 'superadmin',
 		},
@@ -25,7 +28,7 @@ const main = async () => {
 			firstName: 'youness',
 			lastName: 'ezzine',
 			email: 'you.ezzine@gmail.com',
-			password: 'secret',
+			password: await hashPassword('secret'),
 			role: 'admin',
 		},
 	});
@@ -37,7 +40,7 @@ const main = async () => {
 			firstName: 'haruna',
 			lastName: 'toba',
 			email: 'toba.haruna@gmail.com',
-			password: 'secret',
+			password: await hashPassword('secret'),
 			role: 'superadmin',
 		},
 	});
