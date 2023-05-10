@@ -1,59 +1,30 @@
-import { Handler, NextFunction, Request, Response } from 'express';
-import { authenticate } from 'passport';
+import { bind } from 'decko';
 import { Strategy, StrategyOptions, VerifiedCallback } from 'passport-jwt';
-import { PrismaClient, User } from '@prisma/client';
-
-const prisma = new PrismaClient({ log: ['query', 'info', 'error'] });
+import { UserRepository } from '../../../apiv1/components/user/repository';
 
 export class JwtStrategy {
+	#userRepo: UserRepository = new UserRepository();
 	#strategyOptions: StrategyOptions;
-	_strategy: Strategy;
+	strategy: Strategy;
 
 	constructor(strategyOptions: StrategyOptions) {
 		this.#strategyOptions = strategyOptions;
-		this._strategy = new Strategy(this.#strategyOptions, this.#verify);
+		this.strategy = new Strategy(this.#strategyOptions, this.verify);
 	}
 
-	isAuthorized(req: Request, res: Response, next: NextFunction): Handler | void {
+	@bind
+	async verify(payload: any, done: VerifiedCallback): Promise<void> {
 		try {
-			authenticate('jwt', { session: false }, (err: unknown, user: User, info: any) => {
-				if (err) return next(err);
+			const user = await this.#userRepo.findByID(payload.userID);
 
-				if (info) {
-					switch (info.message) {
-						case 'No auth token':
-							return res.status(401).json({ error: 'No token provided' });
-						case 'jwt expired':
-							return res.status(401).json({ error: 'Expired token' });
-					}
-				}
-
-				if (!user) return res.status(401).json({ error: 'User is not authorized' });
-
-				req.user = user;
-
-				return next();
-			})(req, res, next);
-		} catch (error) {
-			return next(error);
-		}
-	}
-
-	async #verify(payload: any, next: VerifiedCallback): Promise<void> {
-		try {
-			const user = await prisma.user.findUnique({
-				where: {
-					id: payload.userID,
-				},
-			});
-
-			if (!user) return next(null, null);
+			if (!user) return done(null, null);
 
 			// do something after verification
+			// Set permissions
 
-			return next(null, user);
+			return done(null, user);
 		} catch (error) {
-			return next(error);
+			return done(error);
 		}
 	}
 }

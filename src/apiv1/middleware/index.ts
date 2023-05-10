@@ -1,12 +1,15 @@
 import { NextFunction, Request, Response, Router, json } from 'express';
 import helmet from 'helmet';
+import { AuthService } from '../../services/auth';
 
 export function registerMiddleware(router: Router): void {
 	router.use(helmet());
 	router.use(json());
 
 	// Setup passport strategies
-	// TODO
+	new AuthService().initStrategies();
+
+	// use conpression js
 }
 
 /**

@@ -37,7 +37,7 @@ export class UserController {
 		try {
 			const user: User = req.body;
 
-			const existingUser = await this.repo.readByEmail(user.email);
+			const existingUser = await this.repo.findByEmail(user.email);
 			if (existingUser) {
 				return res.status(400).json({ error: 'Email is already taken' });
 			}
@@ -45,7 +45,23 @@ export class UserController {
 			user.password = hashedPassword;
 
 			const newUser = await this.repo.createUser(user);
-			return res.status(201).json(newUser);
+			return res.status(201).json({ success: true, data: { user: newUser } });
+		} catch (error) {
+			return next(error);
+		}
+	}
+
+	@bind
+	async findUserByID(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+		try {
+			const userID: number = +req.params.userID;
+
+			const user = await this.repo.findByID(userID);
+			if (!user) {
+				return res.status(404).json({ success: false, data: { error: `Cant find user with id ${userID}` } });
+			}
+
+			return res.json({ success: true, data: { user } });
 		} catch (error) {
 			return next(error);
 		}

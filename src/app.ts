@@ -1,10 +1,8 @@
-import { config } from 'dotenv';
-config();
-
 import express from 'express';
 import { Server } from './apiv1/server';
+import { env } from './config/globals';
 
-const PORT = process.env.PORT;
+const PORT = env.NODE_PORT;
 
 (function main() {
 	// Express server and middlewares

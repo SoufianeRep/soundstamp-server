@@ -4,7 +4,7 @@ import { AuthService } from '../../../services/auth';
 // TODO
 export class UserRoutes {
 	readonly router: Router = Router();
-	readonly controller: UserController = new UserController();
+	readonly userController: UserController = new UserController();
 	authService: AuthService;
 
 	constructor() {
@@ -13,7 +13,24 @@ export class UserRoutes {
 	}
 
 	initRoutes(): void {
-		this.router.get('/', this.controller.readUsers);
-		this.router.post('/', this.controller.createUser);
+		this.router.get(
+			'/',
+			this.authService.validateRequest,
+			this.authService.isAuthenticated,
+			this.userController.readUsers,
+		);
+		this.router.post(
+			'/',
+			this.authService.validateRequest,
+			this.authService.isAuthenticated,
+			this.userController.createUser,
+		);
+
+		this.router.get(
+			'/:userID',
+			this.authService.validateRequest,
+			this.authService.isAuthenticated,
+			this.userController.findUserByID,
+		);
 	}
 }

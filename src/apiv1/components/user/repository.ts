@@ -9,13 +9,32 @@ export class UserRepository {
 	 * @param email Email to search for
 	 * @returns User
 	 */
-	readByEmail(email: string) {
+	async findByEmail(email: string) {
 		try {
-			return prisma.user.findUnique({
+			return await prisma.user.findUnique({
 				where: {
 					email,
 				},
 			});
+		} catch (error: unknown) {
+			throw error;
+		}
+	}
+
+	/**
+	 *
+	 * @param id
+	 * @returns
+	 */
+	async findByID(id: number) {
+		try {
+			const user: User | null = await prisma.user.findUnique({
+				where: {
+					id: id,
+				},
+			});
+
+			return this.exclude(user, ['password']);
 		} catch (error: unknown) {
 			throw error;
 		}
@@ -55,5 +74,19 @@ export class UserRepository {
 		} catch (error: unknown) {
 			throw error;
 		}
+	}
+
+	/**
+	 * Typesafe exclude function returns a user from DB without provided keys
+	 *
+	 * @param user
+	 * @param keys[]
+	 * @returns
+	 */
+	private exclude<User, Key extends keyof User>(user: User, keys: Key[]): Omit<User, Key> {
+		for (const key of keys) {
+			delete user[key];
+		}
+		return user;
 	}
 }
