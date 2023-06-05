@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response, Router, json } from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import { AuthService } from '../../services/auth';
 
 export function registerMiddleware(router: Router): void {
+	router.use(cors());
 	router.use(helmet());
 	router.use(json());
 

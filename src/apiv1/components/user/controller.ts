@@ -54,11 +54,11 @@ export class UserController {
 	@bind
 	async findUserByID(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
 		try {
-			const userID: number = +req.params.userID;
+			const userId: number = +req.params.userID;
 
-			const user = await this.repo.findByID(userID);
+			const user = await this.repo.findByID(userId);
 			if (!user) {
-				return res.status(404).json({ success: false, data: { error: `Cant find user with id ${userID}` } });
+				return res.status(404).json({ success: false, data: { error: `Cant find user with id ${userId}` } });
 			}
 
 			return res.json({ success: true, data: { user } });

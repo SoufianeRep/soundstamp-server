@@ -15,7 +15,7 @@ export class AuthController {
 			const user = await this.userRepo.findByEmail(email);
 
 			if (!user || !(await UtilityService.verifyPassword(password, user.password))) {
-				return res.status(401).json({ status: 401, error: 'Wrong email or password' });
+				return res.status(401).json({ success: false, date: { error: 'Wrong email or password' } });
 			}
 
 			// Create a JWT token

@@ -47,7 +47,13 @@ export class UserRepository {
 	 */
 	readAllUsers(): PrismaPromise<User[] | []> {
 		try {
-			return prisma.user.findMany();
+			return prisma.user.findMany({
+				where: {
+					role: {
+						not: 'superadmin',
+					},
+				},
+			});
 		} catch (error: unknown) {
 			throw error;
 		}
